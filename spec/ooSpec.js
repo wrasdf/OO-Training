@@ -72,6 +72,7 @@ describe("Parking boy will help us",function(){
 	beforeEach(function() {
 
     	parkingBoy = new ParkingBoy({
+    		type : "common",
 			parkingLots : [
 				new ParkingLot({
 					total : 5
@@ -128,6 +129,7 @@ describe("Parking boy will help us",function(){
 	it("Given a parking boy. When there is no slot for us, we park a car. Then he will said error.",function(){
 		
 		parkingBoy = new ParkingBoy({
+			type : "common",
 			parkingLots : [
 				new ParkingLot({
 					total : 5
@@ -149,6 +151,7 @@ describe("Parking boy will help us",function(){
 	it("Given a parking boy. And No parking lot for him. When we park a car. Then he will said error.",function(){
 		
 		parkingBoy = new ParkingBoy({
+			type : "common",
 			parkingLots : []
 		});
 
@@ -176,6 +179,7 @@ describe("Parking boy can manage multiple parking lot",function(){
 		});
 
 		parkingBoy = new ParkingBoy({
+			type : "common",
 			parkingLots : [parkinglot1, parkinglot2]
 		});
 
@@ -251,7 +255,8 @@ describe("Space Control Boy will help us",function(){
 			total : 5
 		});
 
-		spaceControlBoy = new SpaceControlBoy({
+		spaceControlBoy = new ParkingBoy({
+			type : "space",
 			parkingLots : [parkinglot1, parkinglot2]
 		});
 
@@ -302,7 +307,8 @@ describe("Volume Boy will help us",function(){
 			total : 4
 		});
 
-		volumeBoy = new VolumeBoy({
+		volumeBoy = new ParkingBoy({
+			type : "volume",
 			parkingLots : [parkinglot1, parkinglot2]
 		});
 
@@ -365,7 +371,8 @@ describe("parking manager will help us",function(){
 	it("Give a parking manager and a volume parking boy, when we want to park a car, then he will let volume parking boy help us.",function(){
 		
 
-		var volumeBoy = new VolumeBoy({
+		var volumeBoy = new ParkingBoy({
+			type : "volume",
 			parkingLots : [parkinglot1, parkinglot2]
 		});
 
@@ -387,7 +394,8 @@ describe("parking manager will help us",function(){
 
 	it("Give a parking manager and a space parking boy, when we want to unpark our car, then he will let space parking boy help us. And when we want to unpark our car, then manager will let space boy unpark it.",function(){
 
-		var spaceControlBoy = new SpaceControlBoy({
+		var spaceControlBoy = new ParkingBoy({
+			type : "space",
 			parkingLots : [ parkinglot1, parkinglot2 ]
 		});
 
@@ -478,11 +486,12 @@ describe("Parking manager can manage parking manager",function(){
 		});
 
 		parkingBoy = new ParkingBoy({
+			type : "common",
 			name : "Ken A",
 			parkingLots : [parkinglot2]
 		});
 
-		volumeBoy = new VolumeBoy({
+		volumeBoy = new ParkingBoy({
 			name : "Jane B",
 			parkingLots : [parkinglot1]
 		});
@@ -510,7 +519,6 @@ describe("Parking manager can manage parking manager",function(){
 
 	it("Give three parking manager, when we have a requirement, then parking manager leader will let first manager park the car.",function(){
 
-		
 		var myCar = new Car({
 			id : "MB1222"
 		});
@@ -526,24 +534,16 @@ describe("Parking manager can manage parking manager",function(){
 		expect(AndesonManager.unpark(ticket1)).toEqual(myCar);
 
 		var KenA = parkingManagerLeader.getParkingBoy({name:"Peter W"}).getParkingBoy({name:"Ken A"});
-
 		var ticket3 = KenA.park(myCar);
 		expect(parkinglot2.getAvailableSlots()).toEqual(4);
 		expect(KenA.unpark(ticket3)).toEqual(myCar);
-
-		
 
 	});
 
 
 	it("Give a manager Leader, when we want to know more about his jobs, then he will print details for his job.",function(){
-
-		var outPut = parkingManagerLeader.print(parkingManagerLeader);
+		console.log(parkingManagerLeader.print());
 		// jasmine.getFixtures().set(outPut);
-
-
-
-		
 	})
 
 });

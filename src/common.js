@@ -12,3 +12,17 @@ String.prototype.format = function(args){
         return args[i];
     });
 };
+
+var Utility = {
+	extend :  function(subClass, baseClass){
+		function inheritance() { }
+	    
+	    inheritance.prototype = baseClass.prototype;
+	    subClass.prototype = new inheritance();
+	    subClass.prototype.constructor = subClass;
+
+	    subClass.baseConstructor = baseClass;
+	    subClass.superClass = baseClass.prototype;
+	     
+	}
+}

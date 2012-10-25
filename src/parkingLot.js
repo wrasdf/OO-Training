@@ -80,8 +80,18 @@ ParkingLot.prototype.volumeRatio = function(){
 	return 	this.used.length/this.total;
 }
 
+ParkingLot.prototype.printObj = function(){
+	var result = {};
+	result.name = this.name;
+	result.total = this.total;
+	result.availableSlots = this.getAvailableSlots();
+	return result;
+}
 
-
+ParkingLot.prototype.print = function(){
+	var outPutStr = "<li>Parkinglot name : <b class='parkinglot-name'>{0}</b>, it has {1}/{2} slots.</li>"
+	return outPutStr.format(this.name,this.availableSlots,this.total);
+}
 
 
 
