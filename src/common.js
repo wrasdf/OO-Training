@@ -15,6 +15,7 @@ String.prototype.format = function(args){
 
 var Utility = {
 	extend :  function(subClass, baseClass){
+		
 		function inheritance() { }
 	    
 	    inheritance.prototype = baseClass.prototype;

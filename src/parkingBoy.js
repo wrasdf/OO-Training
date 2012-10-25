@@ -10,7 +10,6 @@ function ParkingBoy (options){
 	this.name = config.name;
 	this.type = config.type;
 	this.parkingLots = config.parkingLots;
-	
 
 }
 
@@ -43,8 +42,6 @@ ParkingBoy.prototype.unpark = function(ticket){
 
 		return allSlots;	
 
-        // garbage
-		// return parkingLots.reduce(0, function(s, v){ s+=v.total})		
 	}
 
 	if(this.parkingLots.length == 0){
@@ -76,48 +73,11 @@ ParkingBoy.prototype.unpark = function(ticket){
 }
 
 ParkingBoy.prototype.getAvailableParkingLot = function(){
-	
-	if(this.type == 'common'){
-		for(var i=0; i<this.parkingLots.length; i++){
-			if(!this.parkingLots[i].isEmpty()){
-				return this.parkingLots[i];
-			}
-		}
-	}
-
-	if(this.type == 'volume'){
-		var self = this;
-		var volumeRatio = 0;
-		var availableParkingLot = null;
 		
-		$.each(self.parkingLots, function(index,parkingLot){
-			if(parkingLot.volumeRatio() > volumeRatio){
-				availableParkingLot = parkingLot;
-				return true;
-			}
-		})
-
-		return availableParkingLot;
-	}
-
-	if(this.type == 'space'){
-
-		var availableParkingLot = null;
-		var maxAvailableSlots = 0;
-		var self = this;
-
-		$.each(self.parkingLots,function(index,parkingLot){
-			var parkingLotSlots = parkingLot.getAvailableSlots();
-			if(parkingLotSlots > maxAvailableSlots){
-				maxAvailableSlots = parkingLotSlots;
-				availableParkingLot = parkingLot;
-			}
-		});
-
-		return availableParkingLot;
-	}
-
-	return null;
+	return new StrategyParkingLot({
+		type : this.type,
+		parkingLots : this.parkingLots
+	}).getAvailableParkingLot();
 
 }
 

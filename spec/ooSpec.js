@@ -400,6 +400,7 @@ describe("parking manager will help us",function(){
 		});
 
 		var parkingManager = new ParkingManager({
+			type : "manager",
 			boys : [spaceControlBoy]
 		});
 
@@ -426,6 +427,7 @@ describe("parking manager will help us",function(){
 	it("Give a parking manager but without any parking boy, when we want to park a car, then he will help us.",function(){
 		
 		var parkingManager = new ParkingManager({
+			type : "manager",
 			parkingLots : [ parkinglot1 , parkinglot2 ]
 		});
 
@@ -435,7 +437,7 @@ describe("parking manager will help us",function(){
 		var myCar = new Car({
 			id : "MB12345"
 		});
-
+		
 		var ticket = parkingManager.park(myCar);
 		expect(ticket.carId).toEqual(myCar.id);
 

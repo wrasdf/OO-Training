@@ -11,20 +11,9 @@ function ParkingManager(options){
 	this.type = config.type;
 	this.boys = config.boys;
 	this.parkingLots = config.parkingLots;
-
 }
 
 Utility.extend(ParkingManager, ParkingBoy);
-
-ParkingManager.prototype.getAvailableParkingLot = function(){
-
-	for(var i=0; i<this.parkingLots.length; i++){
-		if(this.parkingLots[i].getAvailableSlots() != 0){
-			return this.parkingLots[i];
-		}
-	}
-
-}
 
 ParkingManager.prototype.getParkingBoy = function(options){
 
