@@ -71,17 +71,14 @@ describe("Parking boy will help us",function(){
 
 	beforeEach(function() {
 
-    	parkingBoy = new ParkingBoy({
-    		type : "common",
-			parkingLots : [
+    	parkingBoy = ParkingBoy.commonParkingBoy([
 				new ParkingLot({
 					total : 5
 				}),
 				new ParkingLot({
 					total : 5
 				})
-			]
-		});
+			]);
 
 	});
 
@@ -128,14 +125,11 @@ describe("Parking boy will help us",function(){
 
 	it("Given a parking boy. When there is no slot for us, we park a car. Then he will said error.",function(){
 		
-		parkingBoy = new ParkingBoy({
-			type : "common",
-			parkingLots : [
+		parkingBoy = ParkingBoy.commonParkingBoy([
 				new ParkingLot({
 					total : 5
 				})
-			]
-		});
+			]);
 
 		parkingBoy.park(new Car());
 		parkingBoy.park(new Car());
@@ -150,10 +144,7 @@ describe("Parking boy will help us",function(){
 
 	it("Given a parking boy. And No parking lot for him. When we park a car. Then he will said error.",function(){
 		
-		parkingBoy = new ParkingBoy({
-			type : "common",
-			parkingLots : []
-		});
+		parkingBoy = ParkingBoy.commonParkingBoy();
 
 		expect(parkingBoy.park(new Car())).toEqual(ParkingLotError.noParkingLot);
 
@@ -178,10 +169,7 @@ describe("Parking boy can manage multiple parking lot",function(){
 			total : 2
 		});
 
-		parkingBoy = new ParkingBoy({
-			type : "common",
-			parkingLots : [parkinglot1, parkinglot2]
-		});
+		parkingBoy = ParkingBoy.commonParkingBoy([parkinglot1, parkinglot2]);
 
 
 	});
@@ -255,10 +243,7 @@ describe("Space Control Boy will help us",function(){
 			total : 5
 		});
 
-		spaceControlBoy = new ParkingBoy({
-			type : "space",
-			parkingLots : [parkinglot1, parkinglot2]
-		});
+		spaceControlBoy = ParkingBoy.spaceParkingBoy([parkinglot1, parkinglot2]);
 
 		parkinglot1.park(new Car());
 		parkinglot1.park(new Car());
@@ -307,10 +292,7 @@ describe("Volume Boy will help us",function(){
 			total : 4
 		});
 
-		volumeBoy = new ParkingBoy({
-			type : "volume",
-			parkingLots : [parkinglot1, parkinglot2]
-		});
+		volumeBoy = ParkingBoy.volumeParkingBoy([parkinglot1, parkinglot2]);
 
 
 	});
@@ -352,208 +334,129 @@ describe("Volume Boy will help us",function(){
 describe("parking manager will help us",function(){
 
 
-	var parkinglot1,parkinglot2
+	var parkinglot1,parkinglot2,parkinglot3,parkinglot4;
 
 	beforeEach(function() {
 
     	parkinglot1 = new ParkingLot({
-			total : 6
+			total : 4
 		});
 
 		parkinglot2 = new ParkingLot({
 			total : 5
 		});
 
+		parkinglot3 = new ParkingLot({
+			total : 3
+		});
+
+		parkinglot4 = new ParkingLot({
+			total : 2
+		});
 
 	});
 
 
-	it("Give a parking manager and a volume parking boy, when we want to park a car, then he will let volume parking boy help us.",function(){
+	it("Give a parking manager and a volume parking boy, when we want to park a car, then he will park car for us.",function(){
 		
-
-		var volumeBoy = new ParkingBoy({
-			type : "volume",
-			parkingLots : [parkinglot1, parkinglot2]
-		});
-
+		var spaceBoy = ParkingBoy.spaceParkingBoy([parkinglot1, parkinglot2]);
 		var parkingManager = new ParkingManager({
-			boys : [volumeBoy]
+			boys : [spaceBoy]
 		});
+
 
 		parkinglot1.park(new Car());
-		parkinglot1.park(new Car());
-		
-		parkinglot2.park(new Car());
+		parkingManager.park(new Car());
 
-		parkingManager.getParkingBoy({type : "volume"}).park(new Car());
-
-		expect(parkinglot1.getAvailableSlots()).toEqual(4);
-		expect(parkinglot2.getAvailableSlots()).toEqual(3);
-
-	});
-
-	it("Give a parking manager and a space parking boy, when we want to unpark our car, then he will let space parking boy help us. And when we want to unpark our car, then manager will let space boy unpark it.",function(){
-
-		var spaceControlBoy = new ParkingBoy({
-			type : "space",
-			parkingLots : [ parkinglot1, parkinglot2 ]
-		});
-
-		var parkingManager = new ParkingManager({
-			type : "manager",
-			boys : [spaceControlBoy]
-		});
-
-		parkinglot1.park(new Car());
-		parkinglot2.park(new Car());
-
-		var myCar = new Car({
-			id : "MB12345"
-		});
-
-		expect(parkingManager.getParkingBoy({type : "space"})).toEqual(spaceControlBoy);
-
-		var ticket = parkingManager.getParkingBoy({type : "space"}).park(myCar);
-		expect(ticket.carId).toEqual(myCar.id);
-
-		expect(parkinglot1.getAvailableSlots()).toEqual(4);
+		expect(parkinglot1.getAvailableSlots()).toEqual(3);
 		expect(parkinglot2.getAvailableSlots()).toEqual(4);
 
-		expect(parkingManager.getParkingBoy({type : "space"}).unpark(ticket)).toEqual(myCar);
-
-
 	});
 
-	it("Give a parking manager but without any parking boy, when we want to park a car, then he will help us.",function(){
+	it("Give a parking manager and a volume parking boy, when we want to unpark a car, then he will unpark car for us.",function(){
 		
+		var commonBoy = ParkingBoy.spaceParkingBoy([parkinglot3, parkinglot4]);
 		var parkingManager = new ParkingManager({
-			type : "manager",
-			parkingLots : [ parkinglot1 , parkinglot2 ]
+			boys : [commonBoy]
 		});
 
-		parkinglot1.park(new Car());
-		parkinglot2.park(new Car());
+		parkinglot3.park(new Car());
+		parkinglot3.park(new Car());
+		parkinglot3.park(new Car());
 
-		var myCar = new Car({
-			id : "MB12345"
-		});
-		
+		var myCar = new Car({id : "MB1234"});
 		var ticket = parkingManager.park(myCar);
-		expect(ticket.carId).toEqual(myCar.id);
 
-		expect(parkinglot1.getAvailableSlots()).toEqual(4);
+		expect(parkinglot3.getAvailableSlots()).toEqual(0);
+		expect(parkinglot4.getAvailableSlots()).toEqual(1);
+
 		expect(parkingManager.unpark(ticket)).toEqual(myCar);
 
 	});
 
 
-});
+	// it("Give a parking manager and a space parking boy, when we want to unpark our car, then he will let space parking boy help us. And when we want to unpark our car, then manager will let space boy unpark it.",function(){
+
+	// 	var spaceControlBoy = new ParkingBoy({
+	// 		type : "space",
+	// 		parkingLots : [ parkinglot1, parkinglot2 ]
+	// 	});
+
+	// 	var parkingManager = new ParkingManager({
+	// 		type : "manager",
+	// 		boys : [spaceControlBoy]
+	// 	});
+
+	// 	parkinglot1.park(new Car());
+	// 	parkinglot2.park(new Car());
+
+	// 	var myCar = new Car({
+	// 		id : "MB12345"
+	// 	});
+
+	// 	expect(parkingManager.getParkingBoy({type : "space"})).toEqual(spaceControlBoy);
+
+	// 	var ticket = parkingManager.getParkingBoy({type : "space"}).park(myCar);
+	// 	expect(ticket.carId).toEqual(myCar.id);
+
+	// 	expect(parkinglot1.getAvailableSlots()).toEqual(4);
+	// 	expect(parkinglot2.getAvailableSlots()).toEqual(4);
+
+	// 	expect(parkingManager.getParkingBoy({type : "space"}).unpark(ticket)).toEqual(myCar);
 
 
-describe("Parking manager can manage parking manager",function(){
+	// });
 
-	var parkinglot1,parkinglot2,parkinglot3,parkinglot4,parkinglot5,parkinglot6;
-	var parkingBoy,volumeBoy,parkingManager1,parkingManager2,parkingManagerLeader;
+	// it("Give a parking manager but without any parking boy, when we want to park a car, then he will help us.",function(){
+		
+	// 	var parkingManager = new ParkingManager({
+	// 		type : "manager",
+	// 		parkingLots : [ parkinglot1 , parkinglot2 ]
+	// 	});
 
-	beforeEach(function() {
+	// 	parkinglot1.park(new Car());
+	// 	parkinglot2.park(new Car());
 
-    	parkinglot1 = new ParkingLot({
-			total : 6,
-			name : "parkinglot1"
-		});
+	// 	var myCar = new Car({
+	// 		id : "MB12345"
+	// 	});
 
-		parkinglot2 = new ParkingLot({
-			total : 5,
-			name : "parkinglot2"
-		});
+	// 	var ticket = parkingManager.park(myCar);
+	// 	expect(ticket.carId).toEqual(myCar.id);
 
-		parkinglot3 = new ParkingLot({
-			total : 4,
-			name : "parkinglot3"
-		});
+	// 	expect(parkinglot1.getAvailableSlots()).toEqual(4);
+	// 	expect(parkingManager.unpark(ticket)).toEqual(myCar);
 
-		parkinglot4 = new ParkingLot({
-			total : 3,
-			name : "parkinglot4"
-		});
+	// });
 
-		parkinglot5 = new ParkingLot({
-			total : 2,
-			name : "parkinglot5"
-		});
-
-		parkinglot6 = new ParkingLot({
-			total : 6,
-			name : "parkinglot6"
-		});
-
-		parkingBoy = new ParkingBoy({
-			type : "common",
-			name : "Ken A",
-			parkingLots : [parkinglot2]
-		});
-
-		volumeBoy = new ParkingBoy({
-			name : "Jane B",
-			parkingLots : [parkinglot1]
-		});
-
-		parkingManager1 = new ParkingManager({
-			name : "Peter W",
-			boys : [parkingBoy],
-			parkingLots : [parkinglot3]
-		});
-
-		parkingManager2 = new ParkingManager({
-			name : "Andeson",
-			boys : [volumeBoy],
-			parkingLots : [parkinglot4]
-		});
-
-		parkingManagerLeader = new ParkingManager({
-			name : "Richa U",
-			boys : [parkingManager1,parkingManager2],
-			parkingLots : [parkinglot5,parkinglot6]
-		});
-
-
-	});
-
-	it("Give three parking manager, when we have a requirement, then parking manager leader will let first manager park the car.",function(){
-
-		var myCar = new Car({
-			id : "MB1222"
-		});
-
-		var ticket1 = parkingManagerLeader.park(myCar);
-		expect(parkinglot5.getAvailableSlots()).toEqual(1);
-		expect(parkingManagerLeader.unpark(ticket1)).toEqual(myCar);
-
-		var AndesonManager = parkingManagerLeader.getParkingBoy({name:"Andeson"});
-
-		var ticket2 = AndesonManager.park(myCar);
-		expect(parkinglot4.getAvailableSlots()).toEqual(2);
-		expect(AndesonManager.unpark(ticket1)).toEqual(myCar);
-
-		var KenA = parkingManagerLeader.getParkingBoy({name:"Peter W"}).getParkingBoy({name:"Ken A"});
-		var ticket3 = KenA.park(myCar);
-		expect(parkinglot2.getAvailableSlots()).toEqual(4);
-		expect(KenA.unpark(ticket3)).toEqual(myCar);
-
-	});
-
-
-	it("Give a manager Leader, when we want to know more about his jobs, then he will print details for his job.",function(){
-		console.log(parkingManagerLeader.print());
-		// jasmine.getFixtures().set(outPut);
-	})
 
 });
 
 
-// describe("Parking manager will help us to print the information",function(){
+// describe("Parking manager can manage parking manager",function(){
 
-// 	var parkinglot1,parkinglot2,parkinglot3,parkinglot4,parkinglot5
+// 	var parkinglot1,parkinglot2,parkinglot3,parkinglot4,parkinglot5,parkinglot6;
+// 	var parkingBoy,volumeBoy,parkingManager1,parkingManager2,parkingManagerLeader;
 
 // 	beforeEach(function() {
 
@@ -582,46 +485,146 @@ describe("Parking manager can manage parking manager",function(){
 // 			name : "parkinglot5"
 // 		});
 
+// 		parkinglot6 = new ParkingLot({
+// 			total : 6,
+// 			name : "parkinglot6"
+// 		});
 
-// 	});
-
-// 	it("Give a parking manager, when we have a requirement, then parking manager will print all the parking lots informations.",function(){
-		
-// 		var parkingBoy = new ParkingBoy({
+// 		parkingBoy = new ParkingBoy({
+// 			type : "common",
 // 			name : "Ken A",
-// 			parkingLots : [parkinglot2,parkinglot5]
+// 			parkingLots : [parkinglot2]
 // 		});
 
-// 		var volumeBoy = new VolumeBoy({
+// 		volumeBoy = new ParkingBoy({
 // 			name : "Jane B",
-// 			parkingLots : [parkinglot1,parkinglot4]
+// 			parkingLots : [parkinglot1]
 // 		});
 
-
-// 		var parkingManager = new ParkingManager({
-// 			name : "Peter S",
-// 			boys : [parkingBoy,volumeBoy],
+// 		parkingManager1 = new ParkingManager({
+// 			name : "Peter W",
+// 			boys : [parkingBoy],
 // 			parkingLots : [parkinglot3]
 // 		});
 
+// 		parkingManager2 = new ParkingManager({
+// 			name : "Andeson",
+// 			boys : [volumeBoy],
+// 			parkingLots : [parkinglot4]
+// 		});
 
-// 		var outPut = parkingManager.print();
+// 		parkingManagerLeader = new ParkingManager({
+// 			name : "Richa U",
+// 			boys : [parkingManager1,parkingManager2],
+// 			parkingLots : [parkinglot5,parkinglot6]
+// 		});
+
+
+// 	});
+
+// 	it("Give three parking manager, when we have a requirement, then parking manager leader will let first manager park the car.",function(){
+
+// 		var myCar = new Car({
+// 			id : "MB1222"
+// 		});
+
+// 		var ticket1 = parkingManagerLeader.park(myCar);
+// 		expect(parkinglot5.getAvailableSlots()).toEqual(1);
+// 		expect(parkingManagerLeader.unpark(ticket1)).toEqual(myCar);
+
+// 		var AndesonManager = parkingManagerLeader.getParkingBoy({name:"Andeson"});
+
+// 		var ticket2 = AndesonManager.park(myCar);
+// 		expect(parkinglot4.getAvailableSlots()).toEqual(2);
+// 		expect(AndesonManager.unpark(ticket1)).toEqual(myCar);
+
+// 		var KenA = parkingManagerLeader.getParkingBoy({name:"Peter W"}).getParkingBoy({name:"Ken A"});
+// 		var ticket3 = KenA.park(myCar);
+// 		expect(parkinglot2.getAvailableSlots()).toEqual(4);
+// 		expect(KenA.unpark(ticket3)).toEqual(myCar);
+
+// 	});
+
+
+// 	it("Give a manager Leader, when we want to know more about his jobs, then he will print details for his job.",function(){
+// 		console.log(parkingManagerLeader.print());
 // 		// jasmine.getFixtures().set(outPut);
-		
-// 		// expect($('.out-put').find("h2").text()).toEqual("Parking Information");
-// 		// expect($('.out-put').find(".manager-name").text()).toEqual("Peter S");
-// 		// expect($('.out-put').find(".manager-slots").text()).toEqual("4");
-// 		// expect($('.out-put').find(".boy-title").length).toEqual(2);
-// 		// expect($('.out-put').find(".boy-title .boy-name").eq(0).text()).toEqual("Ken A");
-// 		// expect($('.out-put').find(".boy-title .boy-type").eq(1).text()).toEqual("volume");
-// 		// expect($('.out-put').find(".boy-details").eq(0).find('li .parkinglot-name').eq(0).text()).toEqual("parkinglot2");
-// 		// expect($('.out-put').find(".boy-details").eq(1).find('li .parkinglot-slots').eq(1).text()).toEqual("3");
-
 // 	})
 
-
-
 // });
+
+
+// // describe("Parking manager will help us to print the information",function(){
+
+// // 	var parkinglot1,parkinglot2,parkinglot3,parkinglot4,parkinglot5
+
+// // 	beforeEach(function() {
+
+// //     	parkinglot1 = new ParkingLot({
+// // 			total : 6,
+// // 			name : "parkinglot1"
+// // 		});
+
+// // 		parkinglot2 = new ParkingLot({
+// // 			total : 5,
+// // 			name : "parkinglot2"
+// // 		});
+
+// // 		parkinglot3 = new ParkingLot({
+// // 			total : 4,
+// // 			name : "parkinglot3"
+// // 		});
+
+// // 		parkinglot4 = new ParkingLot({
+// // 			total : 3,
+// // 			name : "parkinglot4"
+// // 		});
+
+// // 		parkinglot5 = new ParkingLot({
+// // 			total : 2,
+// // 			name : "parkinglot5"
+// // 		});
+
+
+// // 	});
+
+// // 	it("Give a parking manager, when we have a requirement, then parking manager will print all the parking lots informations.",function(){
+		
+// // 		var parkingBoy = new ParkingBoy({
+// // 			name : "Ken A",
+// // 			parkingLots : [parkinglot2,parkinglot5]
+// // 		});
+
+// // 		var volumeBoy = new VolumeBoy({
+// // 			name : "Jane B",
+// // 			parkingLots : [parkinglot1,parkinglot4]
+// // 		});
+
+
+// // 		var parkingManager = new ParkingManager({
+// // 			name : "Peter S",
+// // 			boys : [parkingBoy,volumeBoy],
+// // 			parkingLots : [parkinglot3]
+// // 		});
+
+
+// // 		var outPut = parkingManager.print();
+// // 		// jasmine.getFixtures().set(outPut);
+		
+// // 		// expect($('.out-put').find("h2").text()).toEqual("Parking Information");
+// // 		// expect($('.out-put').find(".manager-name").text()).toEqual("Peter S");
+// // 		// expect($('.out-put').find(".manager-slots").text()).toEqual("4");
+// // 		// expect($('.out-put').find(".boy-title").length).toEqual(2);
+// // 		// expect($('.out-put').find(".boy-title .boy-name").eq(0).text()).toEqual("Ken A");
+// // 		// expect($('.out-put').find(".boy-title .boy-type").eq(1).text()).toEqual("volume");
+// // 		// expect($('.out-put').find(".boy-details").eq(0).find('li .parkinglot-name').eq(0).text()).toEqual("parkinglot2");
+// // 		// expect($('.out-put').find(".boy-details").eq(1).find('li .parkinglot-slots').eq(1).text()).toEqual("3");
+
+// // 	})
+
+
+
+// // });
 
 
 

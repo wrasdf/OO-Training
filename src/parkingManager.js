@@ -1,46 +1,123 @@
 function ParkingManager(options){
+
 	var config = {
 		name : "",
-		type : "manager",
 		boys : [],
 		parkingLots : []
 	};
 
 	$.extend(config,options || {});
 	this.name = config.name;
-	this.type = config.type;
 	this.boys = config.boys;
 	this.parkingLots = config.parkingLots;
+
+	
 }
 
-Utility.extend(ParkingManager, ParkingBoy);
+ParkingManager.prototype.park = function(car){
+	
+	var self = this;
 
-ParkingManager.prototype.getParkingBoy = function(options){
+	function boysPark(car){
 
-	if(!this.boys){
-		return ParkingLotError.noBoys;
-	}
-
-	if(this.boys.length == 0){
-		return ParkingLotError.noBoys;
-	}
-
-	if(!options){
-		return this.boys[0];
-	}
-
-	var result = "";
-	for(var i in options){
-		result = i;
-	}
-
-	for(var i =0 ; i< this.boys.length; i++){
-		if(this.boys[i][result] == options[result]){
-			if(this.boys[i].getAvailableSlots() != 0){
-				return this.boys[i];	
-			}
+		if(self.boys.length == 0){
+			return parkingLotPark(car);
 		}
+
+		var availableBoy = null
+		$.each(self.boys,function(index,boy){
+			if(boy.getAvailableSlots() != 0){
+				availableBoy = boy;
+				return true;
+			}
+		});
+
+		if(!availableBoy){
+			return parkingLotPark(car);
+		}
+
+		return availableBoy.park(car);
+
 	}
+
+	function parkingLotPark(car){
+		
+		if(self.parkingLots.length == 0){
+			return ParkingLotError.noParkingLot
+		}
+
+		var availableParkingLot = null;
+
+		$.each(self.parkingLots,function(index,parkinglot){
+			if(parkinglot.getAvailableSlots() != 0){
+				availableParkingLot = parkinglot;
+				return true;
+			}
+		})
+
+		if(!availableParkingLot){
+			return ParkingLotError.noSlot
+		}
+
+		return availableParkingLot.park(car);
+
+	}
+
+	return boysPark(car);
+
+}
+
+ParkingManager.prototype.unpark = function(ticket){
+
+	var self = this;
+
+	function boyUnpark(ticket){
+
+		if(self.boys.length == 0){
+			return parkingLotUnpark(car);
+		}
+
+		var unparkCar = null
+		$.each(self.boys,function(index,boy){
+			unparkCar = boy.unpark(ticket);
+			if(unparkCar.id == ticket.carId){
+				return true;
+			}
+		});
+
+		if(!unparkCar.id){
+			return parkingLotUnpark(ticket);
+		}
+
+		return unparkCar;
+	}
+
+	function parkingLotUnpark(ticket){
+
+		if(self.parkingLots.length == 0){
+			return ParkingLotError.noParkingLot
+		}
+
+		var unparkCar = null;
+
+		$.each(self.parkingLots,function(index,parkinglot){
+
+			unparkCar = parkinglot.unparkCar(ticket);
+
+			if(unparkCar.id == ticket.carId){
+				return true;
+			}
+
+		});
+
+		if(!unparkCar.id){
+			return ParkingLotError.noCar;
+		}
+
+		return unparkCar;
+	}
+
+	return boyUnpark(ticket);
 
 }
 

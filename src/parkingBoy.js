@@ -1,17 +1,38 @@
 function ParkingBoy (options){
 	var config = {
-		parkingLots : [],
 		name : "",
-		type : ""
+		parkingLots : [],
+		strategy : null
 	}
-	
+
 	$.extend(config,options||{});
 
 	this.name = config.name;
-	this.type = config.type;
 	this.parkingLots = config.parkingLots;
+	this.strategy = config.strategy;
 
 }
+
+ParkingBoy.volumeParkingBoy = function(parkingLots){
+	return new ParkingBoy({
+		parkingLots : parkingLots,
+		strategy: new VolumeStrategy()
+	});
+};
+
+ParkingBoy.spaceParkingBoy = function(parkingLots){
+	return new ParkingBoy({
+		parkingLots : parkingLots,
+		strategy: new SpaceStrategy()
+	});
+};
+
+ParkingBoy.commonParkingBoy = function(parkingLots){
+	return new ParkingBoy({
+		parkingLots : parkingLots,
+		strategy: new CommonStrategy()
+	});
+};
 
 ParkingBoy.prototype.park = function(car){
 
@@ -23,7 +44,7 @@ ParkingBoy.prototype.park = function(car){
 		return ParkingLotError.noSlot;
 	}
 
-	this.getAvailableParkingLot().park(car);
+	this.strategy.getAvailableParkingLot(this.parkingLots).park(car);
 
 	return new Ticket({
 		carId : car.id
@@ -72,14 +93,7 @@ ParkingBoy.prototype.unpark = function(ticket){
 
 }
 
-ParkingBoy.prototype.getAvailableParkingLot = function(){
-		
-	return new StrategyParkingLot({
-		type : this.type,
-		parkingLots : this.parkingLots
-	}).getAvailableParkingLot();
 
-}
 
 ParkingBoy.prototype.getAvailableSlots = function(){
 	

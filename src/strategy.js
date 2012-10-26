@@ -1,57 +1,53 @@
-function StrategyParkingLot(options){
-	var config = {
-		type : "",
-		parkingLots : []
-	}
-	$.extend(config,options);
-	this.type = config.type;
-	this.parkingLots = config.parkingLots;
-}
+function CommonStrategy(){}
 
-StrategyParkingLot.prototype.getAvailableParkingLot = function(){
 
-	if(this.type == 'common' ||  this.type == 'manager'){
-		for(var i=0; i<this.parkingLots.length; i++){
-			if(!this.parkingLots[i].isEmpty()){
-				return this.parkingLots[i];
-			}
+CommonStrategy.prototype.getAvailableParkingLot = function(parkingLots){
+
+	for(var i=0; i<parkingLots.length; i++){
+		if(!parkingLots[i].isEmpty()){
+			return parkingLots[i];
 		}
 	}
 
-	if(this.type == 'volume'){
+}
 
-		var self = this;
-		var volumeRatio = 0;
-		var availableParkingLot = null;
-		
-		$.each(self.parkingLots, function(index,parkingLot){
-			if(parkingLot.volumeRatio() > volumeRatio){
-				availableParkingLot = parkingLot;
-				return true;
-			}
-		})
+function VolumeStrategy(){}
 
-		return availableParkingLot;
-	}
+VolumeStrategy.prototype.getAvailableParkingLot = function(parkingLots){
 
-	if(this.type == 'space'){
+	var volumeRatio = 0;
+	var availableParkingLot = null;
+	
+	$.each(parkingLots, function(index,parkingLot){
+		if(parkingLot.volumeRatio() > volumeRatio){
+			availableParkingLot = parkingLot;
+			return true;
+		}
+	})
 
-		var availableParkingLot = null;
-		var maxAvailableSlots = 0;
-		var self = this;
+	return availableParkingLot;
 
-		$.each(self.parkingLots,function(index,parkingLot){
-			var parkingLotSlots = parkingLot.getAvailableSlots();
-			if(parkingLotSlots > maxAvailableSlots){
-				maxAvailableSlots = parkingLotSlots;
-				availableParkingLot = parkingLot;
-			}
-		});
+}
 
-		return availableParkingLot;
-	}
+function SpaceStrategy(){
 
-	return null;
+}
+
+SpaceStrategy.prototype.getAvailableParkingLot = function(parkingLots){
+
+	var availableParkingLot = null;
+	var maxAvailableSlots = 0;
+
+	$.each(parkingLots,function(index,parkingLot){
+		var parkingLotSlots = parkingLot.getAvailableSlots();
+		if(parkingLotSlots > maxAvailableSlots){
+			maxAvailableSlots = parkingLotSlots;
+			availableParkingLot = parkingLot;
+		}
+	});
+
+	return availableParkingLot;
+
 }
 
 
