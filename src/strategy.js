@@ -1,4 +1,6 @@
-function CommonStrategy(){}
+function CommonStrategy(){
+	this.type = "common";
+}
 
 
 CommonStrategy.prototype.getAvailableParkingLot = function(parkingLots){
@@ -11,7 +13,9 @@ CommonStrategy.prototype.getAvailableParkingLot = function(parkingLots){
 
 }
 
-function VolumeStrategy(){}
+function VolumeStrategy(){
+	this.type = "volume";
+}
 
 VolumeStrategy.prototype.getAvailableParkingLot = function(parkingLots){
 
@@ -21,7 +25,6 @@ VolumeStrategy.prototype.getAvailableParkingLot = function(parkingLots){
 	$.each(parkingLots, function(index,parkingLot){
 		if(parkingLot.volumeRatio() > volumeRatio){
 			availableParkingLot = parkingLot;
-			return true;
 		}
 	})
 
@@ -30,7 +33,7 @@ VolumeStrategy.prototype.getAvailableParkingLot = function(parkingLots){
 }
 
 function SpaceStrategy(){
-
+	this.type = "space";
 }
 
 SpaceStrategy.prototype.getAvailableParkingLot = function(parkingLots){

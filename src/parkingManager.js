@@ -7,12 +7,29 @@ function ParkingManager(options){
 	};
 
 	$.extend(config,options || {});
-	this.name = config.name;
 	this.boys = config.boys;
+	this.type = "manager";
 	this.parkingLots = config.parkingLots;
 
-	
 }
+
+ParkingManager.prototype.getAvailableSlots = function(){
+	
+	var self = this;
+	var availableSlots = 0;
+
+	$.each(self.boys,function(index,boy){
+		availableSlots += boy.getAvailableSlots();		
+	});	
+
+	$.each(self.parkingLots,function(index,parkinglot){
+		availableSlots += parkinglot.getAvailableSlots();	
+	})
+
+	return availableSlots;
+
+}
+
 
 ParkingManager.prototype.park = function(car){
 	
@@ -25,10 +42,11 @@ ParkingManager.prototype.park = function(car){
 		}
 
 		var availableBoy = null
+
 		$.each(self.boys,function(index,boy){
 			if(boy.getAvailableSlots() != 0){
 				availableBoy = boy;
-				return true;
+				return false;
 			}
 		});
 
@@ -51,7 +69,7 @@ ParkingManager.prototype.park = function(car){
 		$.each(self.parkingLots,function(index,parkinglot){
 			if(parkinglot.getAvailableSlots() != 0){
 				availableParkingLot = parkinglot;
-				return true;
+				return false;
 			}
 		})
 
@@ -59,7 +77,11 @@ ParkingManager.prototype.park = function(car){
 			return ParkingLotError.noSlot
 		}
 
-		return availableParkingLot.park(car);
+		availableParkingLot.park(car);
+
+		return new Ticket({
+			carId : car.id
+		})
 
 	}
 
@@ -81,10 +103,9 @@ ParkingManager.prototype.unpark = function(ticket){
 		$.each(self.boys,function(index,boy){
 			unparkCar = boy.unpark(ticket);
 			if(unparkCar.id == ticket.carId){
-				return true;
+				return false;
 			}
 		});
-
 		if(!unparkCar.id){
 			return parkingLotUnpark(ticket);
 		}
@@ -101,11 +122,9 @@ ParkingManager.prototype.unpark = function(ticket){
 		var unparkCar = null;
 
 		$.each(self.parkingLots,function(index,parkinglot){
-
-			unparkCar = parkinglot.unparkCar(ticket);
-
+			unparkCar = parkinglot.unpark(ticket.carId);
 			if(unparkCar.id == ticket.carId){
-				return true;
+				return false;
 			}
 
 		});

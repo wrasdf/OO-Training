@@ -1,16 +1,11 @@
-var ParkingLot = function(options){
+var ParkingLot = function(total){
 	
 	var config = {
-		total : 10,
-		used : [],
-		name : ""
+		total : 10
 	};
 
-	$.extend(config, options || {});
-
-	this.total = config.total;
-	this.used = config.used;
-	this.name = config.name;
+	this.total = total || config.total;
+	this.used = [];
 
 };
 
@@ -47,8 +42,6 @@ ParkingLot.prototype.getCarIndexInParkingLot = function(id){
 }
 
 ParkingLot.prototype.unpark = function(id){
-
-	
 
 	if(!id){
 		return ParkingLotError.noId;

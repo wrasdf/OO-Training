@@ -1,13 +1,11 @@
 function ParkingBoy (options){
 	var config = {
-		name : "",
 		parkingLots : [],
 		strategy : null
 	}
 
 	$.extend(config,options||{});
 
-	this.name = config.name;
 	this.parkingLots = config.parkingLots;
 	this.strategy = config.strategy;
 
@@ -105,8 +103,8 @@ ParkingBoy.prototype.getAvailableSlots = function(){
 
 	var self = this;
 
-	$.each(self.parkingLots,function(index,parkingLot){
-		allCanUsedSlots += parkingLot.getAvailableSlots();
+	$.each(self.parkingLots,function(index,parkinglot){
+		allCanUsedSlots += parkinglot.getAvailableSlots();
 	});
 
 	return allCanUsedSlots;	
