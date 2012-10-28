@@ -8,8 +8,8 @@ function ParkingManager(options){
 
 	$.extend(config,options || {});
 	this.boys = config.boys;
-	this.type = "manager";
 	this.parkingLots = config.parkingLots;
+	this.printStr = new Print();
 
 }
 
@@ -140,69 +140,25 @@ ParkingManager.prototype.unpark = function(ticket){
 
 }
 
-ParkingManager.prototype.printObj = function(){
-
-	var result = {} , self = this;
-	result.name = this.name;
-	result.type = this.type;
-
-	var parkingLots = [];
-	var boys = [];
-
-	$.each(self.parkingLots,function(i,lot){
-		parkingLots.push(lot.printObj);
-	});
-
-	result.parkingLots = parkingLots;
-
-	$.each(self.boys,function(i,boy){
-		boys.push(self.printObj());
-	});
-
-	result.boys = boys;		
-
-	return result;	
-}
-
 ParkingManager.prototype.print = function(){
 
-	var outPutStr = "<ul>", self = this;
-	
-	outPutStr += "<li>Parking manager name : <b class='manager-name'>{0}</b>. He has {1} slots.</li>";
-	
-	outPutStr += "<li><ul>";
+	var self = this;
+
+	var outPutStr = this.printStr.managerStr.format(this.getAvailableSlots());
 	
 	$.each(self.boys,function(i,boy){
-		outPutStr += boy.print();	
+		outPutStr += self.printStr.space + boy.print();	
 	});
 
-	outPutStr += "</ul></li><li><ul>";
 
 	$.each(self.parkingLots,function(i,parkinglot){
-		outPutStr += parkinglot.print();
+		outPutStr += self.printStr.space + parkinglot.print();
 	});
 
-	outPutStr += "</ul></li>";
-
-	outPutStr = outPutStr.format(this.name,this.availableSlots);
-
-
 	return outPutStr
-	// openwin(outPut);
+	
 }
 
-function openwin(str) 
-{
-	OpenWindow=window.open("", "newwin", "height=500, width=800"); 
-	OpenWindow.document.write("<html>"); 
-	OpenWindow.document.write("<title>OpenTest</title>");
-	OpenWindow.document.write("<style type='text/css'>ul,li{list-style:none;}</style>"); 
-	OpenWindow.document.write("<body"); 
-	OpenWindow.document.write(str); 
-	OpenWindow.document.write("</body>"); 
-	OpenWindow.document.write("</html>"); 
-	OpenWindow.document.close();
-} 
 
 
 

@@ -8,6 +8,7 @@ function ParkingBoy (options){
 
 	this.parkingLots = config.parkingLots;
 	this.strategy = config.strategy;
+	this.printStr = new Print();
 
 }
 
@@ -111,30 +112,13 @@ ParkingBoy.prototype.getAvailableSlots = function(){
 
 }
 
-ParkingBoy.prototype.printObj = function(){
-	var result = {} , self = this;
-	result.name = this.name;
-	result.type = this.type;
-	result.availableSlots = this.getAvailableSlots();
-
-	var parkingLots = [];
-	$.each(self.parkingLots,function(i,lot){
-		parkingLots.push(parkingLotInfo(lot));	
-	});
-
-	result.parkingLots = parkingLots;
-	return result;
-}
-
 ParkingBoy.prototype.print = function(){
 	var self = this;
-	var outPutStr = "<li>Parking boy name : <b class='boy-name'>{0}</b>. He is {1} boy and he can manager {2} slots.";
-		outPutStr += "<ul>";
+	var outPutStr = self.printStr.boyStr.format(this.strategy.type,this.getAvailableSlots());
 		$.each(self.parkingLots,function(i,parkinglot){
-			outPutStr += parkinglot.print();
+			outPutStr += self.printStr.space + self.printStr.space + parkinglot.print();
 		});
-		outPutStr += "</ul></li>";
-	return outPutStr.format(self.name,self.type,self.availableSlots);
+	return outPutStr;
 }
 
 

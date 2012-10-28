@@ -25,5 +25,15 @@ var Utility = {
 	    subClass.baseConstructor = baseClass;
 	    subClass.superClass = baseClass.prototype;
 	     
+	},
+	openWin : function(str){
+		var OpenWindow = window.open("_blank", "newwin", "height=500, width=800"); 
+		OpenWindow.document.write("<html>"); 
+		OpenWindow.document.write("<title>Print Parking Manager Information</title>");
+		OpenWindow.document.write("<body>"); 
+		OpenWindow.document.write(str); 
+		OpenWindow.document.write("</body>"); 
+		OpenWindow.document.write("</html>"); 
+		OpenWindow.document.close();
 	}
 }
