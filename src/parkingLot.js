@@ -6,8 +6,6 @@ var ParkingLot = function(total){
 
 	this.total = total || config.total;
 	this.used = [];
-	this.printStr = new Print();
-
 };
 
 ParkingLot.prototype.calculateDataByNeed = function(boy){
@@ -74,8 +72,8 @@ ParkingLot.prototype.volumeRatio = function(){
 	return 	this.used.length/this.total;
 }
 
-ParkingLot.prototype.print = function(){
-	return this.printStr.parkinglotStr.format(this.getAvailableSlots(),this.total);
+ParkingLot.prototype.print = function(printer){
+	return printer.printParkingLot(this);
 }
 
 

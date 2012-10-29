@@ -492,8 +492,8 @@ describe("Parking manager will help us to print the information",function(){
 
 	it("Give a parking manager, when we have a requirement, then parking manager will print all the parking lots informations.",function(){
 		
-		var outPut = parkingManagerLeader.print();
-		Utility.openWin(outPut)
+		var outPut = parkingManagerLeader.print(new Printer());
+		Utility.openWin(outPut);
 		// jasmine.getFixtures().set(outPut);
 		
 		// expect($('.out-put').find("h2").text()).toEqual("Parking Information");

@@ -9,7 +9,6 @@ function ParkingManager(options){
 	$.extend(config,options || {});
 	this.boys = config.boys;
 	this.parkingLots = config.parkingLots;
-	this.printStr = new Print();
 
 }
 
@@ -140,23 +139,8 @@ ParkingManager.prototype.unpark = function(ticket){
 
 }
 
-ParkingManager.prototype.print = function(){
-
-	var self = this;
-
-	var outPutStr = this.printStr.managerStr.format(this.getAvailableSlots());
-	
-	$.each(self.boys,function(i,boy){
-		outPutStr += self.printStr.space + boy.print();	
-	});
-
-
-	$.each(self.parkingLots,function(i,parkinglot){
-		outPutStr += self.printStr.space + parkinglot.print();
-	});
-
-	return outPutStr
-	
+ParkingManager.prototype.print = function(printer){
+	return printer.printManager(this);
 }
 
 

@@ -8,7 +8,6 @@ function ParkingBoy (options){
 
 	this.parkingLots = config.parkingLots;
 	this.strategy = config.strategy;
-	this.printStr = new Print();
 
 }
 
@@ -112,13 +111,8 @@ ParkingBoy.prototype.getAvailableSlots = function(){
 
 }
 
-ParkingBoy.prototype.print = function(){
-	var self = this;
-	var outPutStr = self.printStr.boyStr.format(this.strategy.type,this.getAvailableSlots());
-		$.each(self.parkingLots,function(i,parkinglot){
-			outPutStr += self.printStr.space + self.printStr.space + parkinglot.print();
-		});
-	return outPutStr;
+ParkingBoy.prototype.print = function(printer){
+	return printer.printBoy(this);
 }
 
 
