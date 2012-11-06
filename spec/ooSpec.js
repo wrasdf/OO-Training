@@ -467,6 +467,10 @@ describe("Parking manager will help us to print the information",function(){
 		parkinglot4 = new ParkingLot(2);
 
 		parkinglot5 = new ParkingLot(2);
+		parkinglot6 = new ParkingLot(2);
+		parkinglot7 = new ParkingLot(2);
+		parkinglot8 = new ParkingLot(2);
+		parkinglot9 = new ParkingLot(2);
 
 		parkingBoy = ParkingBoy.commonParkingBoy([parkinglot1]);
 
@@ -474,17 +478,17 @@ describe("Parking manager will help us to print the information",function(){
 
 		parkingManager1 = new ParkingManager({
 			boys : [parkingBoy],
-			parkingLots : [parkinglot3]
+			parkingLots : [parkinglot3,parkinglot6]
 		});
 
 		parkingManager2 = new ParkingManager({
 			boys : [volumeBoy],
-			parkingLots : [parkinglot4]
+			parkingLots : [parkinglot4,parkinglot7]
 		});
 
 		parkingManagerLeader = new ParkingManager({
 			boys : [parkingManager1,parkingManager2],
-			parkingLots : [parkinglot5]
+			parkingLots : [parkinglot5,parkinglot8,parkinglot9]
 		});
 
 
@@ -495,7 +499,7 @@ describe("Parking manager will help us to print the information",function(){
 		var outPut = parkingManagerLeader.print(new Printer());
 		Utility.openWin(outPut);
 		// jasmine.getFixtures().set(outPut);
-		
+		// expect()
 		// expect($('.out-put').find("h2").text()).toEqual("Parking Information");
 		// expect($('.out-put').find(".manager-name").text()).toEqual("Peter S");
 		// expect($('.out-put').find(".manager-slots").text()).toEqual("4");

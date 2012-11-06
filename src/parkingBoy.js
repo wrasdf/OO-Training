@@ -8,6 +8,7 @@ function ParkingBoy (options){
 
 	this.parkingLots = config.parkingLots;
 	this.strategy = config.strategy;
+	this.printer = "Parking boy. He is {0} boy and he can manager {1} slots. <br/>";
 
 }
 
@@ -111,8 +112,8 @@ ParkingBoy.prototype.getAvailableSlots = function(){
 
 }
 
-ParkingBoy.prototype.print = function(printer){
-	return printer.printBoy(this);
+ParkingBoy.prototype.print = function(printer,n){
+	return printer.printBoy(this,n);
 }
 
 

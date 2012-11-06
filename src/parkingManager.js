@@ -9,6 +9,8 @@ function ParkingManager(options){
 	$.extend(config,options || {});
 	this.boys = config.boys;
 	this.parkingLots = config.parkingLots;
+	this.printer = "Parking manager : He has {0} slots. <br/>";
+
 
 }
 
@@ -139,8 +141,8 @@ ParkingManager.prototype.unpark = function(ticket){
 
 }
 
-ParkingManager.prototype.print = function(printer){
-	return printer.printManager(this);
+ParkingManager.prototype.print = function(printer,n){
+	return printer.printManager(this,n);
 }
 
 
